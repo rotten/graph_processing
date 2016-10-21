@@ -42,7 +42,7 @@ public class PageRankPerformance {
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public void measurePageRank() throws IOException {
-        service.pageRank("Person", "KNOWS", 20, db);
+        service.pageRank("Person", "KNOWS", 20, "pagerank", db);
     }
 
 }

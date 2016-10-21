@@ -60,13 +60,14 @@ public class Service {
     public String pageRank(@PathParam("label") String label,
                            @PathParam("type") String type,
                            @DefaultValue("20") @QueryParam("iterations") int iterations,
+                           @DefaultValue("pagerank") @QueryParam("pagerank_property") String pagerankProperty,
                            @Context GraphDatabaseService db) {
 
-        PageRankArrayStorageParallelSPI pageRank = new PageRankArrayStorageParallelSPI(db, pool);
+        PageRankArrayStorageParallelSPI pageRank = new PageRankArrayStorageParallelSPI(db, pool, pagerankProperty);
         pageRank.compute(label, type, iterations);
         writeBackResults(db, pageRank);
 
-        return "PageRank for " + label + " and " + type + " Completed!";
+        return "PageRank for " + label + " and " + type + " Completed - results stored on the nodes as:  " + pagerankProperty;
     }
 
     @GET

@@ -29,12 +29,14 @@ public class PageRankArrayStorageParallelSPI implements PageRank {
     private final ExecutorService pool;
     private final int relCount;
     private AtomicIntegerArray dst;
+    public String pagerankProperty;
 
-    public PageRankArrayStorageParallelSPI(GraphDatabaseService db, ExecutorService pool) {
+    public PageRankArrayStorageParallelSPI(GraphDatabaseService db, ExecutorService pool, String pagerankProperty) {
         this.pool = pool;
         this.db = (GraphDatabaseAPI) db;
         this.nodeCount = new NodeCounter().getNodeCount(db);
         this.relCount = new NodeCounter().getRelationshipCount(db);
+        this.pagerankProperty = pagerankProperty;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class PageRankArrayStorageParallelSPI implements PageRank {
             RelationshipVisitor<RuntimeException> visitor = new RelationshipVisitor<RuntimeException>() {
                 public void visit(long relId, int relTypeId, long startNode, long endNode) throws RuntimeException {
                     if (relTypeId == typeId) {
-                        dst.addAndGet(((int) endNode),src[(int) startNode]);
+                        dst.addAndGet(((int) endNode), src[(int) startNode]);
                     }
                 }
             };
@@ -107,5 +109,9 @@ public class PageRankArrayStorageParallelSPI implements PageRank {
         return nodeCount;
     }
 
+    @Override
+    public String getPropertyName() {
+        return pagerankProperty;
+    }
 
 }
